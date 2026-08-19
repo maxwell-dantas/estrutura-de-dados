@@ -57,8 +57,21 @@ public class PilhaArray implements PilhaADT {
         if (this.isEmpty()) {
             throw new PilhaVazia("A pilha está vazia!");
         }
-        this.topo--;
-        return items[topo +1];
+
+        Object topoAtual = items[topo--];
+
+        if (this.size() <= this.capacidade / 3 && this.capacidade > 2) {
+            this.capacidade /= 2;
+
+            Object[] novoArray = new Object[this.capacidade];
+
+            for (int i = 0; i < this.size(); i++) {
+                novoArray[i] = items[i];
+            }
+            items = novoArray;
+        }
+
+        return topoAtual;
     }
 
     @Override
