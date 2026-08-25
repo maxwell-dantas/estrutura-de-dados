@@ -1,4 +1,4 @@
-package pilha.pilhaArray;
+package pilha.array;
 
 import pilha.*;
 

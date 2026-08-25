@@ -1,4 +1,4 @@
-package pilha.pilhaLinkedList;
+package pilha.linkedList;
 
 public class Node {
     private Object item;

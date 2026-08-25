@@ -1,6 +1,6 @@
-package atividadePilha;
+package pilha.rubroNegra;
 
-import pilha.pilhaArray.PilhaArray;
+import pilha.array.PilhaArray;
 
 public class Matrix {
     private PilhaArray red;

@@ -1,4 +1,4 @@
-package pilha.pilhaLinkedList;
+package pilha.linkedList;
 
 import pilha.*;
 
