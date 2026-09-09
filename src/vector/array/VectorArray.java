@@ -1,9 +1,8 @@
 package vector.array;
 
-import vector.VectorADT;
 import vector.VectorVazio;
 
-public class VectorArray implements VectorADT {
+public class VectorArray implements VectorArrayADT {
     private Object[] vector;
     private int capacity;
     private int size_;

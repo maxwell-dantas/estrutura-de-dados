@@ -1,6 +1,6 @@
-package vector;
+package vector.array;
 
-public interface VectorADT {
+public interface VectorArrayADT {
     public Object elementAtRank(Integer r);
     public Object replaceAtRank(Integer r, Object item);
     public void insertAtRank(Integer r, Object item);
