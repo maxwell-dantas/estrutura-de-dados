@@ -31,10 +31,10 @@ public class VectorArray implements VectorADT {
         this.fatorCrescimento = fatorCrescimento;
     }
 
-    private void resize(int selector) {
-        if (selector == 0) {
+    private void resize(String selector) {
+        if (selector.equals("reduzir")) {
             this.capacity /= 2;
-        } else if (selector == 1) {
+        } else if (selector.equals("aumentar")) {
             if (fatorCrescimento == 0) {
                 capacity *= 2;
             } else {
@@ -59,7 +59,6 @@ public class VectorArray implements VectorADT {
             for (int i = 0; i < size_; i++) {
                 System.out.print(vector[i] + " | ");
             }
-            System.out.println();
         }
     }
 
@@ -71,7 +70,7 @@ public class VectorArray implements VectorADT {
 
         if (r < 0 || r >= size_) {
             String err = (r < 0) ? "abaixo" : "acima";
-            throw new IllegalArgumentException("O valor do índice está " + err + " do escopo!");
+            throw new IndexOutOfBoundsException("O valor do índice está " + err + " do escopo!");
         }
 
         return vector[r];
@@ -85,7 +84,7 @@ public class VectorArray implements VectorADT {
 
         if (r < 0 || r >= size_) {
             String err = (r < 0) ? "abaixo" : "acima";
-            throw new IllegalArgumentException("O valor do índice está " + err + " do escopo!");
+            throw new IndexOutOfBoundsException("O valor do índice está " + err + " do escopo!");
         }
 
         Object itemRemovido = vector[r];
@@ -96,12 +95,12 @@ public class VectorArray implements VectorADT {
     @Override
     public void insertAtRank(Integer r, Object item) {
         if (size_ == capacity) {
-            resize(1);
+            resize("aumentar");
         }
 
         if (r < 0 || r > size_) {
             String err = (r < 0) ? "abaixo" : "acima";
-            throw new IllegalArgumentException("O valor do índice está " + err + " do escopo!");
+            throw new IndexOutOfBoundsException("O valor do índice está " + err + " do escopo!");
         }
 
         for (int i = size_; i > r; i--) {
@@ -120,12 +119,9 @@ public class VectorArray implements VectorADT {
 
         if (r < 0 || r >= size_) {
             String err = (r < 0) ? "abaixo" : "acima";
-            throw new IllegalArgumentException("O valor do índice está " + err + " do escopo!");
+            throw new IndexOutOfBoundsException("O valor do índice está " + err + " do escopo!");
         }
 
-        if (size_ <= capacity / 2 && size_ > 1) {
-            resize(0);
-        }
 
         Object itemRemovido = vector[r];
 
@@ -135,6 +131,11 @@ public class VectorArray implements VectorADT {
 
         size_--;
         vector[size_] = null; // remove a referência ao objeto. ex.: [1, 2, 3] --> [1, 2, null]
+
+        if (size_ <= capacity / 4 && size_ > 1) {
+            resize("reduzir");
+        }
+
         return itemRemovido;
     }
 
