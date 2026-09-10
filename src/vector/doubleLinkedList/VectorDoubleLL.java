@@ -40,6 +40,10 @@ public class VectorDoubleLL implements VectorADT {
             throw new IllegalArgumentException("O valor do índice está " + err + " do escopo!");
         }
 
+        if (r == size_ - 1) {
+            return trailer.getPrev().getValue();
+        }
+
         Node node = header.getNext();
 
         for (int i = 0; i < r; i++) {
@@ -51,7 +55,31 @@ public class VectorDoubleLL implements VectorADT {
 
     @Override
     public Object replaceAtRank(Integer r, Object item) {
-        return r;
+        if (isEmpty()) {
+            throw new VectorVazio("O vetor está vazio!");
+        }
+
+        if (r < 0 || r >= size_) {
+            String err = (r < 0) ? "abaixo" : "acima";
+            throw new IllegalArgumentException("O valor do índice está " + err + " do escopo!");
+        }
+
+        if (r == size_ - 1) {
+            Object toReplace = trailer.getPrev().getValue();
+            trailer.getPrev().setValue(item);
+            return toReplace;
+        }
+
+        Node toReplace = header.getNext();
+
+        for (int i = 0; i < r; i++) {
+            toReplace = toReplace.getNext();
+        }
+
+        Object toReplaceValue = toReplace.getValue();
+        toReplace.setValue(item);
+
+        return toReplaceValue;
     }
 
     @Override
@@ -82,6 +110,15 @@ public class VectorDoubleLL implements VectorADT {
             return;
         }
 
+        if (r == size_) {
+            node.setNext(trailer);
+            node.setPrev(trailer.getPrev());
+            trailer.getPrev().setNext(node);
+            trailer.setPrev(node);
+            size_++;
+            return;
+        }
+
         Node currentNode = header.getNext();
 
         for (int i = 0; i < r; i++) {
@@ -97,7 +134,43 @@ public class VectorDoubleLL implements VectorADT {
 
     @Override
     public Object removeAtRank(Integer r) {
-        return r;
+        if (isEmpty()) {
+            throw new VectorVazio("O vetor está vazio!");
+        }
+
+        if (r < 0 || r >= size_) {
+            String err = (r < 0) ? "abaixo" : "acima";
+            throw new IllegalArgumentException("O valor do índice está " + err + " do escopo!");
+        }
+
+
+        if (r == 0 && size_ == 1) {
+            Node toRemove = header.getNext();
+            header.setNext(null);
+            trailer.setPrev(null);
+            size_--;
+            return toRemove.getValue();
+        }
+
+        if (r == size_ - 1) {
+            Node toRemove = trailer.getPrev();
+            toRemove.getPrev().setNext(toRemove.getNext());
+            toRemove.getNext().setPrev(toRemove.getPrev());
+            size_--;
+            return toRemove.getValue();
+        }
+
+        Node toRemove = header.getNext();
+
+        for (int i = 0; i < r; i++) {
+            toRemove = toRemove.getNext();
+        }
+
+        toRemove.getPrev().setNext(toRemove.getNext());
+        toRemove.getNext().setPrev(toRemove.getPrev());
+        size_--;
+
+        return toRemove.getValue();
     }
 
     @Override
