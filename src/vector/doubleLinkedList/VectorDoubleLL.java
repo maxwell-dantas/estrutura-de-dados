@@ -1,16 +1,103 @@
 package vector.doubleLinkedList;
 
+import vector.VectorADT;
 import vector.VectorVazio;
 
-public class VectorDoubleLL implements VectorListADT {
-    private Node head;
-    private Node tail;
+public class VectorDoubleLL implements VectorADT {
+    private Node header;
+    private Node trailer;
     private int size_;
 
     public VectorDoubleLL() {
-        head = new Node();
-        tail = new Node();
+        header = new Node();
+        trailer = new Node();
         size_ = 0;
+    }
+
+    public void exibir() {
+        if (isEmpty()) {
+            System.out.println("O vetor está vazio!");
+        } else {
+            Node node = header.getNext();
+
+            System.out.print("Header <-> ");
+            while (node != trailer) {
+                System.out.print(node.getValue() + " <-> ");
+                node = node.getNext();
+            }
+            System.out.print("Trailer");
+        }
+    }
+
+    @Override
+    public Object elementAtRank(Integer r) {
+        if (isEmpty()) {
+            throw new VectorVazio("O vetor está vazio!");
+        }
+
+        if (r < 0 || r >= size_) {
+            String err = (r < 0) ? "abaixo" : "acima";
+            throw new IllegalArgumentException("O valor do índice está " + err + " do escopo!");
+        }
+
+        Node node = header.getNext();
+
+        for (int i = 0; i < r; i++) {
+            node = node.getNext();
+        }
+
+        return node.getValue();
+    }
+
+    @Override
+    public Object replaceAtRank(Integer r, Object item) {
+        return r;
+    }
+
+    @Override
+    public void insertAtRank(Integer r, Object item) {
+        if (r < 0 || r > size_) {
+            String err = (r < 0) ? "abaixo" : "acima";
+            throw new IllegalArgumentException("O valor do índice está " + err + " do escopo!");
+        }
+
+        Node node = new Node();
+        node.setValue(item);
+
+        if (header.getNext() == null) {
+            header.setNext(node);
+            trailer.setPrev(node);
+            node.setPrev(header);
+            node.setNext(trailer);
+            size_++;
+            return;
+        }
+
+        if (r == 0) {
+            node.setPrev(header);
+            node.setNext(header.getNext());
+            header.getNext().setPrev(node);
+            header.setNext(node);
+            size_++;
+            return;
+        }
+
+        Node currentNode = header.getNext();
+
+        for (int i = 0; i < r; i++) {
+            currentNode = currentNode.getNext();
+        }
+
+        node.setPrev(currentNode.getPrev());
+        node.setNext(currentNode);
+        node.getPrev().setNext(node);
+        currentNode.setPrev(node);
+        size_++;
+    }
+
+    @Override
+    public Object removeAtRank(Integer r) {
+        return r;
     }
 
     @Override
@@ -23,99 +110,4 @@ public class VectorDoubleLL implements VectorListADT {
         return size_ == 0;
     }
 
-    @Override
-    public Node first() {
-        if (isEmpty()) {
-            throw new VectorVazio("A lista está vazia!");
-        }
-
-        return head.getNext();
-    }
-
-    @Override
-    public Node last() {
-        if (isEmpty()) {
-            throw new VectorVazio("A lista está vazia!");
-        }
-
-        return tail.getPrev();
-    }
-
-    @Override
-    public Node before(Node n) {
-        if (isEmpty()) {
-            throw new VectorVazio("A lista está vazia!");
-        }
-
-        return n.getPrev();
-    }
-
-    @Override
-    public Node after(Node n) {
-        if (isEmpty()) {
-            throw new VectorVazio("A lista está vazia!");
-        }
-
-        return n.getNext();
-    }
-
-    @Override
-    public boolean isFirst(Node n) {
-        return n == first();
-    }
-
-    @Override
-    public boolean isLast(Node n) {
-        return n == last();
-    }
-
-    @Override
-    public void replaceElement(Node n, Object o) {
-        if (isEmpty()) {
-            throw new VectorVazio("A lista está vazia!");
-        }
-
-        n.setValue(o);
-    }
-
-    @Override
-    public void swapElement(Node n, Node q) {
-        if (isEmpty()) {
-            throw new VectorVazio("A lista está vazia!");
-        }
-
-        n.getPrev().setNext(q);
-        q.getNext().setPrev(n);
-        q.setPrev(n.getPrev());
-        n.setNext(q.getNext());
-
-        q.setNext(n);
-        n.setPrev(q);
-
-    }
-
-    @Override
-    public Node insertBefore(Node n, Object o) {
-
-    }
-
-    @Override
-    public Node insertAfter(Node n, Object o) {
-
-    }
-
-    @Override
-    public Node insertFirst(Object o) {
-
-    }
-
-    @Override
-    public Node insertLast(Object o) {
-
-    }
-
-    @Override
-    public Node remove(Node n) {
-
-    }
 }
