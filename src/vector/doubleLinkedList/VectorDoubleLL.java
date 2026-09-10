@@ -11,6 +11,8 @@ public class VectorDoubleLL implements VectorADT {
     public VectorDoubleLL() {
         header = new Node();
         trailer = new Node();
+        header.setNext(trailer);
+        trailer.setPrev(header);
         size_ = 0;
     }
 
@@ -37,7 +39,7 @@ public class VectorDoubleLL implements VectorADT {
 
         if (r < 0 || r >= size_) {
             String err = (r < 0) ? "abaixo" : "acima";
-            throw new IllegalArgumentException("O valor do índice está " + err + " do escopo!");
+            throw new IndexOutOfBoundsException("O valor do índice está " + err + " do escopo!");
         }
 
         if (r == size_ - 1) {
@@ -61,7 +63,7 @@ public class VectorDoubleLL implements VectorADT {
 
         if (r < 0 || r >= size_) {
             String err = (r < 0) ? "abaixo" : "acima";
-            throw new IllegalArgumentException("O valor do índice está " + err + " do escopo!");
+            throw new IndexOutOfBoundsException("O valor do índice está " + err + " do escopo!");
         }
 
         if (r == size_ - 1) {
@@ -86,29 +88,11 @@ public class VectorDoubleLL implements VectorADT {
     public void insertAtRank(Integer r, Object item) {
         if (r < 0 || r > size_) {
             String err = (r < 0) ? "abaixo" : "acima";
-            throw new IllegalArgumentException("O valor do índice está " + err + " do escopo!");
+            throw new IndexOutOfBoundsException("O valor do índice está " + err + " do escopo!");
         }
 
         Node node = new Node();
         node.setValue(item);
-
-        if (header.getNext() == null) {
-            header.setNext(node);
-            trailer.setPrev(node);
-            node.setPrev(header);
-            node.setNext(trailer);
-            size_++;
-            return;
-        }
-
-        if (r == 0) {
-            node.setPrev(header);
-            node.setNext(header.getNext());
-            header.getNext().setPrev(node);
-            header.setNext(node);
-            size_++;
-            return;
-        }
 
         if (r == size_) {
             node.setNext(trailer);
@@ -140,22 +124,16 @@ public class VectorDoubleLL implements VectorADT {
 
         if (r < 0 || r >= size_) {
             String err = (r < 0) ? "abaixo" : "acima";
-            throw new IllegalArgumentException("O valor do índice está " + err + " do escopo!");
-        }
-
-
-        if (r == 0 && size_ == 1) {
-            Node toRemove = header.getNext();
-            header.setNext(null);
-            trailer.setPrev(null);
-            size_--;
-            return toRemove.getValue();
+            throw new IndexOutOfBoundsException("O valor do índice está " + err + " do escopo!");
         }
 
         if (r == size_ - 1) {
             Node toRemove = trailer.getPrev();
             toRemove.getPrev().setNext(toRemove.getNext());
             toRemove.getNext().setPrev(toRemove.getPrev());
+
+            toRemove.setPrev(null);
+            toRemove.setNext(null);
             size_--;
             return toRemove.getValue();
         }
@@ -168,6 +146,9 @@ public class VectorDoubleLL implements VectorADT {
 
         toRemove.getPrev().setNext(toRemove.getNext());
         toRemove.getNext().setPrev(toRemove.getPrev());
+
+        toRemove.setPrev(null);
+        toRemove.setNext(null);
         size_--;
 
         return toRemove.getValue();
