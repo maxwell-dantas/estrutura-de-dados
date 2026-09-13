@@ -67,12 +67,12 @@ public class List implements ListADT {
 
     @Override
     public boolean isFirst(Node n) {
-        return n.equals(header.getNext());
+        return n == header.getNext();
     }
 
     @Override
     public boolean isLast(Node n) {
-        return n.equals(trailer.getPrev());
+        return n == trailer.getPrev();
     }
 
     @Override
