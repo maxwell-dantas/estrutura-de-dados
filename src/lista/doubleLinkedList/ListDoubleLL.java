@@ -5,12 +5,12 @@ import lista.ListaVazia;
 import lista.NoNaoEncontrado;
 import lista.PosicaoInvalida;
 
-public class List implements ListADT {
+public class ListDoubleLL implements ListADT {
     private Node header;
     private Node trailer;
     private int size_;
 
-    public List() {
+    public ListDoubleLL() {
         header = new Node();
         trailer = new Node();
         size_ = 0;
