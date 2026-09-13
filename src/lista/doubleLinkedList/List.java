@@ -3,6 +3,7 @@ package lista.doubleLinkedList;
 import lista.ListADT;
 import lista.ListaVazia;
 import lista.NoNaoEncontrado;
+import lista.PosicaoInvalida;
 
 public class List implements ListADT {
     private Node header;
@@ -21,6 +22,10 @@ public class List implements ListADT {
     public Node search(Object o) {
         if (isEmpty()) {
             throw new ListaVazia("A lista está vazia!");
+        }
+
+        if (trailer.getPrev().getValue().equals(o)) {
+            return trailer.getPrev();
         }
 
         Node currentNode = header.getNext();
@@ -62,12 +67,12 @@ public class List implements ListADT {
 
     @Override
     public boolean isFirst(Node n) {
-        return n.getValue() == first();
+        return n.equals(header.getNext());
     }
 
     @Override
     public boolean isLast(Node n) {
-        return n.getValue() == last();
+        return n.equals(trailer.getPrev());
     }
 
     @Override
@@ -89,7 +94,7 @@ public class List implements ListADT {
     @Override
     public Object before(Node n) {
         if (n.getPrev() == header) {
-            throw new OutOfMemoryError("Não há elementos antes do nó selecionado.");
+            throw new PosicaoInvalida("Não há elementos antes do nó selecionado.");
         }
         return n.getPrev().getValue();
     }
@@ -97,7 +102,7 @@ public class List implements ListADT {
     @Override
     public Object after(Node n) {
         if (n.getNext() == trailer) {
-            throw new OutOfMemoryError("Não há elementos depois do nó selecionado.");
+            throw new PosicaoInvalida("Não há elementos depois do nó selecionado.");
         }
         return n.getNext().getValue();
     }
@@ -111,49 +116,56 @@ public class List implements ListADT {
 
     @Override
     public void swapElement(Node n, Node q) {
-
+        Object temp = n.getValue();
+        n.setValue(q.getValue());
+        q.setValue(temp);
     }
 
     @Override
     public void insertBefore(Node n, Object o) {
+        Node newNode = new Node();
+        newNode.setValue(o);
 
+        newNode.setPrev(n.getPrev());
+        newNode.setNext(n);
+
+        n.getPrev().setNext(newNode);
+        n.setPrev(newNode);
+
+        size_++;
     }
 
     @Override
     public void insertAfter(Node n, Object o) {
+        Node newNode = new Node();
+        newNode.setValue(o);
 
+        newNode.setNext(n.getNext());
+        newNode.setPrev(n);
+
+        n.getNext().setPrev(newNode);
+        n.setNext(newNode);
+
+        size_++;
     }
 
     @Override
     public void insertFirst(Object o) {
-        Node newNode = new Node();
-        newNode.setValue(o);
-
-        newNode.setPrev(header);
-        newNode.setNext(header.getNext());
-
-        header.getNext().setPrev(newNode);
-        header.setNext(newNode);
-
-        size_++;
+        insertBefore(header.getNext(), o);
     }
 
     @Override
     public void insertLast(Object o) {
-        Node newNode = new Node();
-        newNode.setValue(o);
-
-        newNode.setPrev(trailer.getPrev());
-        newNode.setNext(trailer);
-
-        trailer.getPrev().setNext(newNode);
-        trailer.setPrev(newNode);
-
-        size_++;
+        insertAfter(trailer.getPrev(), o);
     }
 
     @Override
     public Object remove(Node n) {
+        n.getPrev().setNext(n.getNext());
+        n.getNext().setPrev(n.getPrev());
+        n.setPrev(null);
+        n.setNext(null);
+        size_--;
         return n.getValue();
     }
 }
