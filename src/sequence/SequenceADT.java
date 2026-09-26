@@ -19,7 +19,7 @@ public interface SequenceADT {
     Object replaceElement(Position node, Object object);
     Object remove(Position node);
     void swapElement(Position node1, Position node2);
-    void inserBefore(Position node, Object object);
+    void insertBefore(Position node, Object object);
     void insertAfter(Position node, Object object);
     void insertFirst(Object object);
     void insertLast(Object object);
